@@ -11,9 +11,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @ToString
 public class Book {
-    private int book_id;
+    private int id;
     private String title;
-    private int author_id;
-    private int publisher_id;
+    private Author authorId;
+    private Publisher publisherId;
     private LocalDate publicationYear;
 }

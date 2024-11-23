@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class Publisher {
-    private int publisher_id;
+    private int id;
     private String name;
     private List<Book> books;
 }
