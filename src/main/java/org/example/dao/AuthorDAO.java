@@ -21,58 +21,6 @@ public class AuthorDAO {
         this.connectionUtil = connectionUtil;
     }
 
-   /* public List<Author> getAll() {
-        List<Author> authors = new ArrayList<>();
-        Map<Integer, Author> authorMap = new HashMap<>();
-
-        String authorQuery = "SELECT * FROM authors";
-        String bookQuery = "SELECT * FROM books";
-
-        try (Connection connection = connectionUtil.getConnection()) {
-            // выполнение запроса на авторов
-            try (PreparedStatement preparedStatement = connection.prepareStatement(authorQuery);
-                 ResultSet authorRs = preparedStatement.executeQuery()) {
-                while (authorRs.next()) {
-                    int authorId = authorRs.getInt("id");
-                    String authorName = authorRs.getString("name");
-                    Author author = new Author();
-                    author.setId(authorId);
-                    author.setName(authorName);
-                    author.setBooks(new ArrayList<>());
-
-                    authors.add(author);
-                    authorMap.put(authorId, author);
-                }
-            }
-
-            // выполнение запроса на книги
-            try (PreparedStatement preparedStatement = connection.prepareStatement(bookQuery);
-                 ResultSet bookRs = preparedStatement.executeQuery()) {
-                while (bookRs.next()) {
-                    int bookId = bookRs.getInt("book_id");
-                    String title = bookRs.getString("title");
-                    int authorId = bookRs.getInt("author_id");
-                    LocalDate publicationYear = bookRs.getDate("publication_year").toLocalDate();
-
-                    Book book = new Book();
-                    book.setId(bookId);
-                    book.setTitle(title);
-                    book.setPublicationYear(publicationYear);
-
-                    Author author = authorMap.get(authorId);
-                    if (author != null) {
-                        // убедитесь, что это setAuthor, а не setAuthorId
-                        book.setAuthorId(author);
-                        author.getBooks().add(book);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving authors and books", e);
-        }
-
-        return authors;
-    }*/
 
     public List<Author> getAll() {
         List<Author> authors = new ArrayList<>();
