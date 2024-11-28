@@ -1,6 +1,14 @@
-package org.example.model;
+package org.example.dto;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.example.model.Book;
 
 import java.util.List;
 
@@ -8,7 +16,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Author {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class AuthorGetAllRs {
     private int id;
     private String name;
     private List<Book> books;
