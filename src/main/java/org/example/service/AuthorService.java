@@ -2,6 +2,7 @@ package org.example.service;
 
 import org.example.dao.AuthorDAO;
 import org.example.dto.AuthorGetAllRs;
+import org.example.dto.AuthorGetByIdRs;
 import org.example.model.Author;
 import org.example.util.ConnectionUtil;
 
@@ -28,5 +29,19 @@ public class AuthorService {
             authors.add(authorGetAllRs);
         }
         return authors;
+    }
+
+    public AuthorGetByIdRs getAuthorById(int id){
+        AuthorGetByIdRs authorGetByIdRs = new AuthorGetByIdRs();
+
+        Author author = authorDAO.getAuthorById(id);
+
+        if (author != null) {
+            authorGetByIdRs.setId(author.getId());
+            authorGetByIdRs.setName(author.getName());
+            authorGetByIdRs.setBooks(author.getBooks());
+        }
+
+        return authorGetByIdRs;
     }
 }
