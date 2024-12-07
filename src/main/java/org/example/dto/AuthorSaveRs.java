@@ -1,6 +1,8 @@
-package org.example.model;
+package org.example.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import org.example.model.Book;
 
 import java.util.List;
 
@@ -8,12 +10,11 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
-public class Author {
-    private int id;
+public class AuthorSaveRs {private int id;
     private String name;
     private List<Book> books;
-
     @Override
     public String toString() {
         StringBuilder bookTitles = new StringBuilder();
