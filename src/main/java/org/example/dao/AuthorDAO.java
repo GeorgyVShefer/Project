@@ -6,13 +6,8 @@ import org.example.model.Publisher;
 import org.example.util.ConnectionUtil;
 
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AuthorDAO {
     private ConnectionUtil connectionUtil;
@@ -39,6 +34,34 @@ public class AuthorDAO {
         return authors;
     }
 
+    public Author getAuthorById(int id){
+        Author author = new Author();
+        try(Connection connection = connectionUtil.getConnection();
+            PreparedStatement statement = connection.prepareStatement("SELECT * from authors where id =?")){
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                author.setId(resultSet.getInt("id"));
+                author.setName(resultSet.getString("name"));
+                author.setBooks(getAllBooksByAuthorId(id));
+            }
+            return author;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Author save(Author author){
+        try(Connection connection = connectionUtil.getConnection();
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO authors(id,name) values (?,?)")){
+            statement.setInt(1,author.getId());
+            statement.setString(2,author.getName());
+            statement.executeUpdate();
+            return author;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private List<Book> getAllBooksByAuthorId(int id) {
         List<Book> books = new ArrayList<>();
 
@@ -52,7 +75,7 @@ public class AuthorDAO {
                 int publisherId = resultSet.getInt("publisher_id");
                 Date publicYear = resultSet.getDate("publication_year");
 
-                books.add(new Book(bookId, title, getAuthorById(id), getPublisherById(publisherId), publicYear));
+                books.add(new Book(bookId, title, getAuthorId(id), getPublisherById(publisherId), publicYear));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -60,7 +83,7 @@ public class AuthorDAO {
         return books;
     }
 
-    public Author getAuthorById(int id) {
+    private Author getAuthorId(int id) {
         Author author = new Author();
         try (Connection connection = connectionUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT id, name from authors where id = ?")) {
@@ -78,7 +101,7 @@ public class AuthorDAO {
         }
     }
 
-    public Publisher getPublisherById(int id){
+    private Publisher getPublisherById(int id){
         Publisher publisher = new Publisher();
 
         try(Connection connection = connectionUtil.getConnection();
