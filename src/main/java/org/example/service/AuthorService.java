@@ -2,10 +2,7 @@ package org.example.service;
 
 import lombok.AllArgsConstructor;
 import org.example.dao.AuthorDAO;
-import org.example.dto.AuthorGetAllRs;
-import org.example.dto.AuthorGetByIdRs;
-import org.example.dto.AuthorSaveRq;
-import org.example.dto.AuthorSaveRs;
+import org.example.dto.*;
 import org.example.mapper.AuthorMapper;
 import org.example.model.Author;
 
@@ -15,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AuthorService {
     private AuthorDAO authorDAO;
-    private AuthorMapper authorMapper;
+    private AuthorMapper mapper;
     public AuthorService(AuthorDAO authorDAO) {
         this.authorDAO = authorDAO;
     }
@@ -50,9 +47,12 @@ public class AuthorService {
     }
 
     public AuthorSaveRs save(AuthorSaveRq authorSaveRq) {
-        authorDAO.save(authorMapper.toAuthors(authorSaveRq));
-        return authorMapper.toAuthorSaveRs(authorSaveRq);
+        authorDAO.save(mapper.toAuthors(authorSaveRq));
+        return mapper.toAuthorSaveRs(authorSaveRq);
     }
 
-
+    public AuthorUpdateRs update(int id, AuthorUpdateRq authorUpdateRq){
+        authorDAO.update(id, mapper.toAuthors(authorUpdateRq));
+        return  mapper.toAuthorUpdateRs(authorUpdateRq);
+    }
 }

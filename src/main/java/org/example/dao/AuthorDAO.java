@@ -62,6 +62,19 @@ public class AuthorDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public Author update(int id, Author author){
+        try(Connection connection = connectionUtil.getConnection();
+            PreparedStatement statement = connection.prepareStatement("UPDATE  authors SET name = ? where id = ?")){
+            statement.setString(1, author.getName());
+            statement.setInt(2, id);
+            statement.executeUpdate();
+            return author;
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     private List<Book> getAllBooksByAuthorId(int id) {
         List<Book> books = new ArrayList<>();
 
