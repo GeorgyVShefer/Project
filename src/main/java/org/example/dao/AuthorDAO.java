@@ -6,13 +6,8 @@ import org.example.model.Publisher;
 import org.example.util.ConnectionUtil;
 
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AuthorDAO {
     private ConnectionUtil connectionUtil;
@@ -41,7 +36,6 @@ public class AuthorDAO {
 
     public Author getAuthorById(int id){
         Author author = new Author();
-
         try(Connection connection = connectionUtil.getConnection();
             PreparedStatement statement = connection.prepareStatement("SELECT * from authors where id =?")){
             statement.setInt(1, id);
@@ -57,6 +51,17 @@ public class AuthorDAO {
         }
     }
 
+    public Author save(Author author){
+        try(Connection connection = connectionUtil.getConnection();
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO authors(id,name) values (?,?)")){
+            statement.setInt(1,author.getId());
+            statement.setString(2,author.getName());
+            statement.executeUpdate();
+            return author;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private List<Book> getAllBooksByAuthorId(int id) {
         List<Book> books = new ArrayList<>();
 

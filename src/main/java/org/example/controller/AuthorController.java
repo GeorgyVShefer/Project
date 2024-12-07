@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.dao.AuthorDAO;
 import org.example.dto.AuthorGetAllRs;
 import org.example.dto.AuthorGetByIdRs;
+import org.example.dto.AuthorSaveRq;
+import org.example.mapper.AuthorMapper;
 import org.example.service.AuthorService;
 import org.example.util.ConnectionUtil;
 
@@ -23,7 +25,7 @@ public class AuthorController extends HttpServlet {
     private AuthorService authorService;
 
     public void init(){
-        authorService = new AuthorService(new AuthorDAO(new ConnectionUtil()));
+        authorService = new AuthorService(new AuthorDAO(new ConnectionUtil()), new AuthorMapper());
     }
 
     @Override
@@ -54,6 +56,22 @@ public class AuthorController extends HttpServlet {
 
             resp.getWriter().write(json);
         }
+    }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+
+        //Достать json объект из метода post класса java servlet
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        AuthorSaveRq authorSaveRq = objectMapper.readValue(req.getReader(), AuthorSaveRq.class);
+
+        authorService.save(authorSaveRq);
+
+        String json = new ObjectMapper().writeValueAsString(authorSaveRq);
+
+        resp.getWriter().write(json);
     }
 }

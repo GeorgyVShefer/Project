@@ -1,9 +1,12 @@
 package org.example.service;
 
 
+import org.checkerframework.checker.units.qual.A;
 import org.example.dao.AuthorDAO;
 import org.example.dto.AuthorGetAllRs;
 import org.example.dto.AuthorGetByIdRs;
+import org.example.dto.AuthorSaveRq;
+import org.example.dto.AuthorSaveRs;
 import org.example.model.Author;
 import org.example.model.Book;
 import org.junit.Assert;
@@ -18,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 class AuthorServiceTest {
@@ -47,7 +52,7 @@ class AuthorServiceTest {
 
     @Test
     @DisplayName("Достает автора из БД по ключу")
-    public void testGetAuthorById(){
+    public void testGetAuthorById_Should_Return_Author(){
         Author expected = new Author(1,"Maxim Gorky", new ArrayList<Book>());
 
         when(authorDAO.getAuthorById(1)).thenReturn(expected);
@@ -57,5 +62,17 @@ class AuthorServiceTest {
         assertEquals(expected.getId(),actual.getId());
         assertEquals(expected.getName(),actual.getName());
         assertEquals(expected.getBooks(),actual.getBooks());
+    }
+    @Test
+    @DisplayName("Добавляет нового автора в таблицу авторов")
+    public void testSaveAuthor_ShouldAddAuthor_WhenQueryIsSuccess(){
+        AuthorSaveRq author = new AuthorSaveRq(1, "Max Montana", new ArrayList<Book>());
+        Author expected = new Author(author.getId(), author.getName(), author.getBooks());
+        when(authorDAO.save(any())).thenReturn(expected);
+
+        AuthorSaveRs actual = authorService.save(author);
+
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getName(), actual.getName());
     }
 }
