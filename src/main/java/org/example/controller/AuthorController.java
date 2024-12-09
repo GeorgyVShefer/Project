@@ -6,6 +6,7 @@ import org.example.dao.AuthorDAO;
 import org.example.dto.AuthorGetAllRs;
 import org.example.dto.AuthorGetByIdRs;
 import org.example.dto.AuthorSaveRq;
+import org.example.dto.AuthorUpdateRq;
 import org.example.mapper.AuthorMapper;
 import org.example.service.AuthorService;
 import org.example.util.ConnectionUtil;
@@ -63,7 +64,6 @@ public class AuthorController extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        //Достать json объект из метода post класса java servlet
         ObjectMapper objectMapper = new ObjectMapper();
 
         AuthorSaveRq authorSaveRq = objectMapper.readValue(req.getReader(), AuthorSaveRq.class);
@@ -73,5 +73,22 @@ public class AuthorController extends HttpServlet {
         String json = new ObjectMapper().writeValueAsString(authorSaveRq);
 
         resp.getWriter().write(json);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        AuthorUpdateRq authorUpdateRq = objectMapper.readValue(req.getReader(), AuthorUpdateRq.class);
+
+
+        authorService.update(Integer.parseInt(req.getParameter("id")), authorUpdateRq);
+
+        String json = new ObjectMapper().writeValueAsString(authorUpdateRq);
+
+        resp.getWriter().write(json);
+
     }
 }
