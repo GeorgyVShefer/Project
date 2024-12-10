@@ -22,6 +22,11 @@ public class AuthorGetAllRs {
     private String name;
     private List<Book> books;
 
+    public AuthorGetAllRs(int i, String author1) {
+        this.id = i;
+        this.name = author1;
+    }
+
     @Override
     public String toString() {
         StringBuilder bookTitles = new StringBuilder();

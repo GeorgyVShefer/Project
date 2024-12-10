@@ -21,7 +21,7 @@ public class AuthorDAO {
         List<Author> authors = new ArrayList<>();
 
         try (Connection connection = connectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT * from authors")) {
+             PreparedStatement statement = connection.prepareStatement("SELECT * from author")) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
@@ -37,7 +37,7 @@ public class AuthorDAO {
     public Author getAuthorById(int id){
         Author author = new Author();
         try(Connection connection = connectionUtil.getConnection();
-            PreparedStatement statement = connection.prepareStatement("SELECT * from authors where id =?")){
+            PreparedStatement statement = connection.prepareStatement("SELECT * from author where id =?")){
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
@@ -53,7 +53,7 @@ public class AuthorDAO {
 
     public Author save(Author author){
         try(Connection connection = connectionUtil.getConnection();
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO authors(id,name) values (?,?)")){
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO author(id,name) values (?,?)")){
             statement.setInt(1,author.getId());
             statement.setString(2,author.getName());
             statement.executeUpdate();
@@ -66,11 +66,11 @@ public class AuthorDAO {
         List<Book> books = new ArrayList<>();
 
         try (Connection connection = connectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT * from books where author_id = ?")) {
+             PreparedStatement statement = connection.prepareStatement("SELECT * from book where author_id = ?")) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                int bookId = resultSet.getInt("book_id");
+                int bookId = resultSet.getInt("id");
                 String title = resultSet.getString("title");
                 int publisherId = resultSet.getInt("publisher_id");
                 Date publicYear = resultSet.getDate("publication_year");
@@ -86,7 +86,7 @@ public class AuthorDAO {
     private Author getAuthorId(int id) {
         Author author = new Author();
         try (Connection connection = connectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT id, name from authors where id = ?")) {
+             PreparedStatement statement = connection.prepareStatement("SELECT id, name from author where id = ?")) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -105,7 +105,7 @@ public class AuthorDAO {
         Publisher publisher = new Publisher();
 
         try(Connection connection = connectionUtil.getConnection();
-            PreparedStatement statement = connection.prepareStatement("SELECT id, name from publishers where id = ?")) {
+            PreparedStatement statement = connection.prepareStatement("SELECT id, name from publisher where id = ?")) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){

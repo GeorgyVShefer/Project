@@ -1,7 +1,6 @@
 package org.example.service;
 
 
-import org.checkerframework.checker.units.qual.A;
 import org.example.dao.AuthorDAO;
 import org.example.dto.AuthorGetAllRs;
 import org.example.dto.AuthorGetByIdRs;
@@ -9,12 +8,9 @@ import org.example.dto.AuthorSaveRq;
 import org.example.dto.AuthorSaveRs;
 import org.example.model.Author;
 import org.example.model.Book;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -22,7 +18,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 class AuthorServiceTest {

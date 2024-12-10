@@ -18,11 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-
-
 @WebServlet("/authors")
 public class AuthorController extends HttpServlet {
-    private AuthorService authorService;
+    AuthorService authorService;
 
     public void init(){
         authorService = new AuthorService(new AuthorDAO(new ConnectionUtil()), new AuthorMapper());
