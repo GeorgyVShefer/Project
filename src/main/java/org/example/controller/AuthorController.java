@@ -89,6 +89,15 @@ public class AuthorController extends HttpServlet {
         String json = new ObjectMapper().writeValueAsString(authorUpdateRq);
 
         resp.getWriter().write(json);
+    }
 
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+
+        String id = req.getParameter("id");
+
+        resp.getWriter().write(authorService.deleteById(Integer.parseInt(id)));
     }
 }

@@ -87,6 +87,25 @@ class AuthorServiceTest {
         AuthorUpdateRs actual = authorService.update(id, authorUpdateRq);
 
         assertEquals(expected.getName(), actual.getName());
+    }
 
+
+
+    @Test
+    void testDeleteByIdIsSuccess() {
+        when(authorDAO.deleteAuthorById(1)).thenReturn(true);
+
+        String result = authorService.deleteById(1);
+
+        assertEquals("Автор удален под id 1", result);
+    }
+
+    @Test
+    void testDeleteByIdIsFail() {
+        when(authorDAO.deleteAuthorById(2)).thenReturn(false);
+
+        String result = authorService.deleteById(2);
+
+        assertEquals("Такого id не существует", result);
     }
 }

@@ -75,6 +75,21 @@ public class AuthorDAO {
         }
     }
 
+    public boolean deleteAuthorById(int id){
+        deleteBookByAuthorId(id, false);
+
+        try(Connection connection = connectionUtil.getConnection();
+            PreparedStatement statement = connection.prepareStatement("delete from authors where id = ?")){
+            statement.setInt(1, id);
+
+            int i = statement.executeUpdate();
+            return i > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     private List<Book> getAllBooksByAuthorId(int id) {
         List<Book> books = new ArrayList<>();
 
@@ -126,6 +141,19 @@ public class AuthorDAO {
                 publisher.setName(resultSet.getString("name"));
             }
             return publisher;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void deleteBookByAuthorId(int id, boolean isRecursiveCall){
+        if (isRecursiveCall) {
+            return;
+        }
+        try(Connection connection = connectionUtil.getConnection();
+            PreparedStatement statement = connection.prepareStatement("delete from books where author_id = ?")){
+            statement.setInt(1, id);
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
