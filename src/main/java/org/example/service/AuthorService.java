@@ -42,7 +42,6 @@ public class AuthorService {
             authorGetByIdRs.setName(author.getName());
             authorGetByIdRs.setBooks(author.getBooks());
         }
-
         return authorGetByIdRs;
     }
 
@@ -54,5 +53,12 @@ public class AuthorService {
     public AuthorUpdateRs update(int id, AuthorUpdateRq authorUpdateRq){
         authorDAO.update(id, mapper.toAuthors(authorUpdateRq));
         return  mapper.toAuthorUpdateRs(authorUpdateRq);
+    }
+
+    public String deleteById(int id){
+        if(authorDAO.deleteAuthorById(id)){
+            return "Автор удален под id " + id;
+        }
+        return "Такого id не существует";
     }
 }
