@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.dao.BookDAO;
 import org.example.dto.BookGetAllRs;
+import org.example.dto.BookGetByIdRs;
+import org.example.mapper.BookMapper;
 import org.example.model.Author;
 import org.example.model.Book;
 import org.example.service.BookService;
@@ -24,21 +26,39 @@ public class BookController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        service = new BookService(new BookDAO(new ConnectionUtil()));
+        service = new BookService(new BookDAO(new ConnectionUtil()), new BookMapper());
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
+        String action = req.getParameter("action");
+        if(action.equals("getById")){
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-        List<BookGetAllRs> allRespBook = service.getAll();
+            String id = req.getParameter("id");
 
-        String json = objectMapper.writeValueAsString(allRespBook);
+            BookGetByIdRs byId = service.getById(Integer.parseInt(id));
 
-        resp.getWriter().write(json);
+            String json = objectMapper.writeValueAsString(byId);
+
+            resp.getWriter().write(json);
+        }  else if(action.equals("getAll")){
+            resp.setContentType("application/json");
+            resp.setCharacterEncoding("UTF-8");
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+            List<BookGetAllRs> allRespBook = service.getAll();
+
+            String json = objectMapper.writeValueAsString(allRespBook);
+
+            resp.getWriter().write(json);
+        }
+
     }
 }

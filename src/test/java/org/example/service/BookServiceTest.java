@@ -2,6 +2,8 @@ package org.example.service;
 
 import org.example.dao.BookDAO;
 import org.example.dto.BookGetAllRs;
+import org.example.dto.BookGetByIdRs;
+import org.example.mapper.BookMapper;
 import org.example.model.Author;
 import org.example.model.Book;
 import org.example.model.Publisher;
@@ -19,11 +21,12 @@ import static org.mockito.Mockito.when;
 class BookServiceTest {
     private BookDAO bookDAO;
     private BookService service;
-
+    private BookMapper mapper;
     @BeforeEach
     public void setup(){
         bookDAO = Mockito.mock(BookDAO.class);
-        service = new BookService(bookDAO);
+        mapper = new BookMapper();
+        service = new BookService(bookDAO,mapper);
     }
 
     @Test
@@ -42,5 +45,19 @@ class BookServiceTest {
         assertEquals(expected.get(0).getAuthorId(),actual.get(0).getAuthorId());
         assertEquals(expected.get(0).getPublisherId(),actual.get(0).getPublisherId());
         assertEquals(expected.get(0).getPublicationYear(),actual.get(0).getPublicationYear());
+    }
+
+    @Test
+    public void testShouldReturnBookById(){
+        Book expected = new Book(1, "some book", new Author(), new Publisher(), new Date(1993 - 02 - 02));
+        when(bookDAO.getBookById(1)).thenReturn(expected);
+
+        BookGetByIdRs actual = service.getById(1);
+
+        assertEquals(expected.getId(),actual.getId());
+        assertEquals(expected.getTitle(),actual.getTitle());
+        assertEquals(expected.getAuthorId(),actual.getAuthorId());
+        assertEquals(expected.getPublisherId(),actual.getPublisherId());
+        assertEquals(expected.getPublicationYear(),actual.getPublicationYear());
     }
 }
