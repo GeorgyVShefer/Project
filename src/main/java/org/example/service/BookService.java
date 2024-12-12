@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import org.example.dao.AuthorDAO;
 import org.example.dao.BookDAO;
 import org.example.dto.BookGetAllRs;
+import org.example.dto.BookGetByIdRs;
+import org.example.mapper.BookMapper;
 import org.example.model.Book;
 
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BookService {
     private BookDAO bookDAO;
+    private BookMapper mapper;
 
     public List<BookGetAllRs> getAll(){
         List<BookGetAllRs> listBookGetAllRs = new ArrayList<>();
@@ -26,5 +29,16 @@ public class BookService {
             listBookGetAllRs.add(respBook);
         }
         return listBookGetAllRs;
+    }
+
+    public BookGetByIdRs getById(int id){
+        Book book = bookDAO.getBookById(id);
+        /*BookGetByIdRs bookGetById = new BookGetByIdRs();
+        bookGetById.setId(book.getId());
+        bookGetById.setTitle(book.getTitle());
+        bookGetById.setAuthorId(book.getAuthorId());
+        bookGetById.setPublisherId(book.getPublisherId());
+        bookGetById.setPublicationYear(book.getPublicationYear());*/
+        return mapper.toBookGetByIdRs(book);
     }
 }
