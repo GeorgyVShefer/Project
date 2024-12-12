@@ -1,9 +1,6 @@
 package org.example.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,14 +14,13 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AuthorGetAllRs {
+public class AuthorSaveRq {
     private int id;
     private String name;
     private List<Book> books;
 
-    public AuthorGetAllRs(int i, String author1) {
-        this.id = i;
-        this.name = author1;
+    public AuthorSaveRq(String newAuthor) {
+        this.name = newAuthor;
     }
 
     @Override
