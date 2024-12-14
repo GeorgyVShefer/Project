@@ -33,12 +33,6 @@ public class BookService {
 
     public BookGetByIdRs getById(int id){
         Book book = bookDAO.getBookById(id);
-        /*BookGetByIdRs bookGetById = new BookGetByIdRs();
-        bookGetById.setId(book.getId());
-        bookGetById.setTitle(book.getTitle());
-        bookGetById.setAuthorId(book.getAuthorId());
-        bookGetById.setPublisherId(book.getPublisherId());
-        bookGetById.setPublicationYear(book.getPublicationYear());*/
         return mapper.toBookGetByIdRs(book);
     }
 }
