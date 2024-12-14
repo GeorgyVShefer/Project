@@ -15,8 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
-
-public class BookGetByIdRs {
+public class BookSaveRs {
     private int id;
     private String title;
     private Author authorId;

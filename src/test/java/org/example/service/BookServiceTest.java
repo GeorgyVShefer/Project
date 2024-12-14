@@ -3,6 +3,8 @@ package org.example.service;
 import org.example.dao.BookDAO;
 import org.example.dto.BookGetAllRs;
 import org.example.dto.BookGetByIdRs;
+import org.example.dto.BookSaveRq;
+import org.example.dto.BookSaveRs;
 import org.example.mapper.BookMapper;
 import org.example.model.Author;
 import org.example.model.Book;
@@ -16,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 class BookServiceTest {
@@ -59,5 +62,21 @@ class BookServiceTest {
         assertEquals(expected.getAuthorId(),actual.getAuthorId());
         assertEquals(expected.getPublisherId(),actual.getPublisherId());
         assertEquals(expected.getPublicationYear(),actual.getPublicationYear());
+    }
+
+    @Test
+    public void testShouldSaveBook(){
+        BookSaveRq book = new BookSaveRq(1,"some title", new Author(), new Publisher(), new Date());
+        Book expected = new Book(book.getId(),book.getTitle(),book.getAuthorId(),book.getPublisherId(),book.getPublicationYear());
+
+        when(bookDAO.save(any())).thenReturn(expected);
+
+        BookSaveRs actual = service.save(book);
+
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getTitle(), actual.getTitle());
+        assertEquals(expected.getAuthorId(), actual.getAuthorId());
+        assertEquals(expected.getPublisherId(), actual.getPublisherId());
+        assertEquals(expected.getPublicationYear(), actual.getPublicationYear());
     }
 }

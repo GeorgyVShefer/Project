@@ -4,8 +4,7 @@ package org.example.controller;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.dao.BookDAO;
-import org.example.dto.BookGetAllRs;
-import org.example.dto.BookGetByIdRs;
+import org.example.dto.*;
 import org.example.mapper.BookMapper;
 import org.example.model.Author;
 import org.example.model.Book;
@@ -32,7 +31,7 @@ public class BookController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        if(action.equals("getById")){
+        if (action.equals("getById")) {
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
 
@@ -46,7 +45,7 @@ public class BookController extends HttpServlet {
             String json = objectMapper.writeValueAsString(byId);
 
             resp.getWriter().write(json);
-        }  else if(action.equals("getAll")){
+        } else if (action.equals("getAll")) {
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
 
@@ -59,6 +58,53 @@ public class BookController extends HttpServlet {
 
             resp.getWriter().write(json);
         }
+    }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        BookSaveRq bookSaveRq = objectMapper.readValue(req.getReader(), BookSaveRq.class);
+
+
+        service.save(bookSaveRq);
+
+        String json = objectMapper.writeValueAsString(bookSaveRq);
+
+        resp.getWriter().write(json);
+
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Book book = objectMapper.readValue(req.getReader(), Book.class);
+
+
+        service.update(Integer.parseInt(req.getParameter("id")), book);
+
+        String json = new ObjectMapper().writeValueAsString(book);
+
+        resp.getWriter().write(json);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String id = req.getParameter("id");
+        String delete = service.delete(Integer.parseInt(id));
+
+        resp.getWriter().write(delete);
     }
 }
