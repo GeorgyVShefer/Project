@@ -58,6 +58,49 @@ public class BookDAO {
         }
     }
 
+    public Book save(Book book) {
+        try (Connection connection = connectionUtil.getConnection();
+             PreparedStatement statement = connection.prepareStatement("insert into books " +
+                     "(book_id, title, author_id,publisher_id, publication_year) values (?,?,?,?,?)")) {
+                statement.setInt(1,book.getId());
+                statement.setString(2,book.getTitle());
+                statement.setInt(3,book.getAuthorId().getId());
+                statement.setInt(4,book.getPublisherId().getId());
+                statement.setDate(5,new Date(book.getPublicationYear().getTime()));
+                statement.executeUpdate();
+                return book;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Book update(int id, Book book){
+        try(Connection connection = connectionUtil.getConnection();
+            PreparedStatement statement = connection.prepareStatement("update books set title = ?, author_id = ?, publisher_id = ?, publication_year = ? where book_id = ?")){
+            statement.setString(1, book.getTitle());
+            statement.setInt(2, book.getAuthorId().getId());
+            statement.setInt(3, book.getPublisherId().getId());
+            statement.setDate(4, new Date(book.getPublicationYear().getTime()));
+            statement.setInt(5, id);
+
+            statement.executeUpdate();
+            return book;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean delete(int id){
+        try(Connection connection = connectionUtil.getConnection();
+            PreparedStatement statement = connection.prepareStatement("delete from books where book_id = ?")) {
+            statement.setInt(1, id);
+            int i = statement.executeUpdate();
+            return i > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Author getAuthorById(int id) {
         Author author = new Author();
 

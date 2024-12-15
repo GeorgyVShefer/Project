@@ -1,6 +1,5 @@
 package org.example.dto;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
@@ -15,8 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
-
-public class BookGetByIdRs {
+public class BookSaveRq {
     private int id;
     private String title;
     private Author authorId;
