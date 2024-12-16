@@ -1,29 +1,27 @@
 package org.example.dao;
 
 import org.example.model.Author;
+import org.example.model.Book;
+import org.example.model.Publisher;
 import org.example.util.ConnectionUtil;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
-
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-
-public class AuthorDAOTest {
-
+public class BookDAOTest {
     private PostgreSQLContainer<?> postgreSQLContainer;
     private ConnectionUtil connectionUtil;
-    private AuthorDAO authorDAO;
+    private BookDAO bookDAO;
 
     @Before
     public void setUp() throws Exception {
@@ -51,9 +49,7 @@ public class AuthorDAOTest {
             }
         };
 
-        // Инициализируем DAO
-        authorDAO = new AuthorDAO(connectionUtil);
-
+        bookDAO = new BookDAO(connectionUtil);
         // Создаем таблицы и добавляем тестовые данные
         try (Connection connection = connectionUtil.getConnection();
              Statement statement = connection.createStatement()) {
@@ -86,7 +82,6 @@ public class AuthorDAOTest {
                     "('Book3', 2, 1, '2021-01-01')");
         }
     }
-
     @BeforeEach
     public void clearDatabase() throws Exception {
         // Очищаем таблицы перед каждым тестом
@@ -114,75 +109,74 @@ public class AuthorDAOTest {
     }
 
     @Test
-    public void testGetAll() {
-        // Вызываем метод DAO
-        List<Author> authors = authorDAO.getAll();
+    public void testGetAll(){
+        List<Book> allBooks = bookDAO.getAll();
 
-        // Проверяем результат
-        assertEquals(2, authors.size());
+        assertEquals(3, allBooks.size());
 
-        // Проверяем данные первого автора
-        Author author1 = authors.get(0);
-        assertEquals("Author1", author1.getName());
-        assertEquals(2, author1.getBooks().size());
-        assertEquals("Book1", author1.getBooks().get(0).getTitle());
-        assertEquals("Book2", author1.getBooks().get(1).getTitle());
+        Book bookOne = allBooks.get(0);
+        Book bookTwo = allBooks.get(1);
+        Book bookThree = allBooks.get(2);
 
-        // Проверяем данные второго автора
-        Author author2 = authors.get(1);
-        assertEquals("Author2", author2.getName());
-        assertEquals(1, author2.getBooks().size());
-        assertEquals("Book3", author2.getBooks().get(0).getTitle());
+        assertEquals(1,allBooks.get(0).getId());
+        assertEquals("Book1", allBooks.get(0).getTitle());
+        assertEquals(2,allBooks.get(1).getId());
+        assertEquals("Book2",allBooks.get(1).getTitle());
+        assertEquals(3,allBooks.get(2).getId());
+        assertEquals("Book3",allBooks.get(2).getTitle());
     }
 
     @Test
-    public void testGetById() {
-        Author authorById = authorDAO.getAuthorById(1);
+    public void testById(){
+        Book bookById = bookDAO.getBookById(1);
 
-        assertEquals(1, authorById.getId());
-        assertEquals("Author1", authorById.getName());
-        assertEquals("Book1", authorById.getBooks().get(0).getTitle());
-        assertEquals("Book2", authorById.getBooks().get(1).getTitle());
+        assertEquals("Book1", bookById.getTitle());
+        assertEquals(1, bookById.getId());
     }
 
     @Test
-    public void testSaveAuthor(){
-        Author newAuthor = authorDAO.save(new Author(4, "author4",new ArrayList<>()));
+    public void testSave(){
+        Author author = new Author(1, "auth1", new ArrayList<>());
+        Publisher publisher = new Publisher(1, "pub1", new ArrayList<>());
+        Date date = new Date();
+        Book newBook = new Book(4, "some title", author, publisher, date);
+        Book saveBook = bookDAO.save(newBook);
 
-        assertEquals(4, newAuthor.getId());
-        assertEquals("author4", newAuthor.getName());
-        assertEquals(0, newAuthor.getBooks().size());
+        assertEquals(4, saveBook.getId());
+        assertEquals("some title", saveBook.getTitle());
+        assertEquals(1, saveBook.getAuthorId().getId());
+        assertEquals(1,saveBook.getPublisherId().getId());
     }
 
     @Test
-    public void testUpdateAuthor(){
-        Author updateAuthor = new Author();
-        updateAuthor.setName("updatedName");
+    public void testUpdate(){
+        Author author = new Author(1, "auth1", new ArrayList<>());
+        Publisher publisher = new Publisher(1, "pub1", new ArrayList<>());
+        Date date = new Date();
 
-        Author author = authorDAO.update(1, updateAuthor);
+        Book updateBook = new Book();
+        updateBook.setTitle("some title");
+        updateBook.setAuthorId(author);
+        updateBook.setPublisherId(publisher);
+        updateBook.setPublicationYear(date);
 
-        assertEquals("updatedName",author.getName());
+        Book saveBook = bookDAO.save(updateBook);
 
+        assertEquals("some title", saveBook.getTitle());
+        assertEquals(1, saveBook.getAuthorId().getId());
+        assertEquals(1, saveBook.getPublisherId().getId());
     }
 
     @Test
-    public void deleteAuthorByIdIsSuccess(){
-        boolean b = authorDAO.deleteAuthorById(1);
-
-        assertEquals(true, b);
+    public void testDeleteIsSuccess(){
+        boolean delete = bookDAO.delete(1);
+        assertEquals(true, delete);
 
     }
     @Test
-    public void deleteAuthorByIdIsFail(){
-        boolean b = authorDAO.deleteAuthorById(5);
+    public void testDeleteIsFail(){
+        boolean delete = bookDAO.delete(5);
+        assertEquals(false, delete);
 
-        assertEquals(false, b);
-
-    }
-
-    @After
-    public void tearDown() {
-        // Останавливаем контейнер после тестов
-        postgreSQLContainer.stop();
     }
 }

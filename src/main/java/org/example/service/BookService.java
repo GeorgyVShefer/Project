@@ -3,10 +3,7 @@ package org.example.service;
 import lombok.AllArgsConstructor;
 import org.example.dao.AuthorDAO;
 import org.example.dao.BookDAO;
-import org.example.dto.BookGetAllRs;
-import org.example.dto.BookGetByIdRs;
-import org.example.dto.BookSaveRq;
-import org.example.dto.BookSaveRs;
+import org.example.dto.*;
 import org.example.mapper.BookMapper;
 import org.example.model.Book;
 
@@ -33,8 +30,9 @@ public class BookService {
         return mapper.toBookSaveRs(bookSaveRq);
     }
 
-    public Book update(int id, Book book){
-        return bookDAO.update(id, book);
+    public BookUpdateRs update(int id, BookUpdateRq bookUpdateRq){
+        bookDAO.update(id, mapper.toBookUpdate(bookUpdateRq));
+        return mapper.toBookUpdateRs(bookUpdateRq);
     }
 
     public String delete(int id){

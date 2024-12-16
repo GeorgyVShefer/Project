@@ -1,10 +1,7 @@
 package org.example.service;
 
 import org.example.dao.BookDAO;
-import org.example.dto.BookGetAllRs;
-import org.example.dto.BookGetByIdRs;
-import org.example.dto.BookSaveRq;
-import org.example.dto.BookSaveRs;
+import org.example.dto.*;
 import org.example.mapper.BookMapper;
 import org.example.model.Author;
 import org.example.model.Book;
@@ -78,5 +75,43 @@ class BookServiceTest {
         assertEquals(expected.getAuthorId(), actual.getAuthorId());
         assertEquals(expected.getPublisherId(), actual.getPublisherId());
         assertEquals(expected.getPublicationYear(), actual.getPublicationYear());
+    }
+
+    @Test
+    public void testShouldUpdateBook(){
+        BookUpdateRq bookUpdateRq = new BookUpdateRq("new Book", new Author(), new Publisher(), new Date());
+
+        int id = 1;
+
+        Book expected = new Book(id, bookUpdateRq.getTitle(), bookUpdateRq.getAuthorId(),
+                bookUpdateRq.getPublisherId(), bookUpdateRq.getPublicationYear());
+
+        when(bookDAO.update(id,expected)).thenReturn(expected);
+
+        BookUpdateRs actual = service.update(id, bookUpdateRq);
+
+        assertEquals(expected.getTitle(), actual.getTitle());
+        assertEquals(expected.getAuthorId(), actual.getAuthorId());
+        assertEquals(expected.getPublisherId(), actual.getPublisherId());
+        assertEquals(expected.getPublicationYear(), actual.getPublicationYear());
+    }
+
+    @Test
+    public void testShouldDeleteBookByIdIsSuccess(){
+        when(bookDAO.delete(1)).thenReturn(true);
+
+        String result = service.delete(1);
+
+        assertEquals("Книга с id 1 была удалена", result);
+
+    }
+
+    @Test
+    public void testShouldDeleteByIdIsFail(){
+        when(bookDAO.delete(1)).thenReturn(false);
+
+        String result = service.delete(1);
+
+        assertEquals("Такого id не существует", result);
     }
 }
