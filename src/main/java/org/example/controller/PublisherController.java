@@ -1,14 +1,12 @@
 package org.example.controller;
 
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.dao.BookDAO;
+import org.example.dao.PublisherDAO;
 import org.example.dto.*;
-import org.example.mapper.BookMapper;
-import org.example.model.Author;
-import org.example.model.Book;
-import org.example.service.BookService;
+import org.example.mapper.PublisherMapper;
+import org.example.model.Publisher;
+import org.example.service.PublisherService;
 import org.example.util.ConnectionUtil;
 
 import javax.servlet.ServletException;
@@ -19,42 +17,37 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/books")
-public class BookController extends HttpServlet {
-    private BookService service;
+@WebServlet("/publishers")
+public class PublisherController extends HttpServlet {
+    private PublisherService service;
 
     @Override
     public void init() throws ServletException {
-        service = new BookService(new BookDAO(new ConnectionUtil()), new BookMapper());
+        service = new PublisherService(new PublisherDAO(new ConnectionUtil()), new PublisherMapper());
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        if (action.equals("getById")) {
+        if(action.equals("getAll")){
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
-
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-            String id = req.getParameter("id");
+            List<PublisherGetAllRs> all = service.getAll();
 
-            BookGetByIdRs byId = service.getById(Integer.parseInt(id));
-
-            String json = objectMapper.writeValueAsString(byId);
+            String json = objectMapper.writeValueAsString(all);
 
             resp.getWriter().write(json);
-        } else if (action.equals("getAll")) {
+        } else if(action.equals("getById")){
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
 
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-            List<BookGetAllRs> allRespBook = service.getAll();
+            PublisherGetByIdRs id = service.getById(Integer.parseInt(req.getParameter("id")));
 
-            String json = objectMapper.writeValueAsString(allRespBook);
+            String json = objectMapper.writeValueAsString(id);
 
             resp.getWriter().write(json);
         }
@@ -68,15 +61,14 @@ public class BookController extends HttpServlet {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        BookSaveRq bookSaveRq = objectMapper.readValue(req.getReader(), BookSaveRq.class);
+        PublisherSaveRq publisherSaveRq = objectMapper.readValue(req.getReader(), PublisherSaveRq.class);
 
 
-        service.save(bookSaveRq);
+        service.save(publisherSaveRq);
 
-        String json = objectMapper.writeValueAsString(bookSaveRq);
+        String json = objectMapper.writeValueAsString(publisherSaveRq);
 
         resp.getWriter().write(json);
-
     }
 
     @Override
@@ -86,12 +78,12 @@ public class BookController extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
 
         ObjectMapper objectMapper = new ObjectMapper();
-        BookUpdateRq bookUpdateRq = objectMapper.readValue(req.getReader(), BookUpdateRq.class);
 
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        BookUpdateRs id = service.update(Integer.parseInt(req.getParameter("id")), bookUpdateRq);
+        PublisherUpdateRq publisherUpdateRq = objectMapper.readValue(req.getReader(), PublisherUpdateRq.class);
 
-        String json = new ObjectMapper().writeValueAsString(id);
+        service.update(Integer.parseInt(req.getParameter("id")), publisherUpdateRq);
+
+        String json = objectMapper.writeValueAsString(publisherUpdateRq);
 
         resp.getWriter().write(json);
     }

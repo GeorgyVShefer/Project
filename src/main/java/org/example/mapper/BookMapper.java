@@ -1,9 +1,6 @@
 package org.example.mapper;
 
-import org.example.dto.BookGetAllRs;
-import org.example.dto.BookGetByIdRs;
-import org.example.dto.BookSaveRq;
-import org.example.dto.BookSaveRs;
+import org.example.dto.*;
 import org.example.model.Book;
 
 import java.util.ArrayList;
@@ -57,5 +54,21 @@ public class BookMapper {
                 .build();
     }
 
+    public Book toBookUpdate(BookUpdateRq bookUpdateRq){
+        return Book.builder()
+                .title(bookUpdateRq.getTitle())
+                .authorId(bookUpdateRq.getAuthorId())
+                .publisherId(bookUpdateRq.getPublisherId())
+                .publicationYear(bookUpdateRq.getPublicationYear())
+                .build();
+    }
 
+    public BookUpdateRs toBookUpdateRs(BookUpdateRq bookUpdateRq){
+        return BookUpdateRs.builder()
+                .title(bookUpdateRq.getTitle())
+                .authorId(bookUpdateRq.getAuthorId())
+                .publisherId(bookUpdateRq.getPublisherId())
+                .publicationYear(bookUpdateRq.getPublicationYear())
+                .build();
+    }
 }

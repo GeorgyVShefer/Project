@@ -1,5 +1,6 @@
 package org.example.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.util.List;
@@ -8,7 +9,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder
 public class Publisher {
     private int id;
     private String name;
